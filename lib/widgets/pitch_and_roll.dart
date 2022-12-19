@@ -14,11 +14,7 @@ class DroneJoystick extends StatelessWidget {
 
     controller.setpointVectorNotifier.notifyListeners();
 
-    try {
-      await controller.move();
-    } catch (e) {
-      //controller.droneVector.xy = Vector2(2000, 2000);
-    }
+    await controller.move();
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'package:drone_commander/controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vector_math/vector_math.dart' hide Colors;
 import 'widgets/pitch_and_roll.dart';
 import 'widgets/lift_and_yaw.dart';
 
@@ -47,18 +46,6 @@ class _CommandControls extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ValueListenableBuilder<Vector4>(
-                    valueListenable: controller.setpointVectorNotifier,
-                    builder: (context, coord, _) {
-                      return Text(
-                        "X: ${coord.x.toStringAsFixed(3)}\n"
-                        "Y: ${coord.y.toStringAsFixed(3)}\n"
-                        "Z: ${coord.z.toStringAsFixed(3)}\n"
-                        "Yaw: ${coord.w.toStringAsFixed(3)}\n",
-                        textAlign: TextAlign.center,
-                      );
-                    },
-                  ),
                   ValueListenableBuilder<List<num>>(
                     valueListenable: controller.motorThrustListNotifier,
                     builder: (context, thrust, _) {
@@ -78,6 +65,24 @@ class _CommandControls extends StatelessWidget {
                       );
                     },
                   ),
+                  StreamBuilder<void>(
+                      stream: Stream.periodic(const Duration(milliseconds: 300),
+                              (_) => controller.getDroneAngles())
+                          .asyncMap((event) async {
+                        await event;
+                        print("object");
+                      }),
+                      builder: (context, snap) {
+                        return ValueListenableBuilder<String>(
+                          valueListenable: controller.responseNotifier,
+                          builder: (context, response, _) {
+                            return Text(
+                              "\n${controller.response}",
+                              textAlign: TextAlign.center,
+                            );
+                          },
+                        );
+                      }),
                 ],
               ),
               LiftAndYaw(controller: controller),
