@@ -43,47 +43,47 @@ class _CommandControls extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               DroneJoystick(controller: controller),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ValueListenableBuilder<List<num>>(
-                    valueListenable: controller.motorThrustListNotifier,
-                    builder: (context, thrust, _) {
-                      return Text(
-                        "\nM1: ${thrust[0]}  M2: ${thrust[1]}\n"
-                        "M3: ${thrust[2]}  M4: ${thrust[3]}",
-                        textAlign: TextAlign.center,
-                      );
-                    },
-                  ),
-                  ValueListenableBuilder<num>(
-                    valueListenable: controller.liftCoeffNotifier,
-                    builder: (context, liftCoeff, _) {
-                      return Text(
-                        "\nLift Coeff: ${liftCoeff.toStringAsFixed(3)}",
-                        textAlign: TextAlign.center,
-                      );
-                    },
-                  ),
-                  StreamBuilder<void>(
-                      stream: Stream.periodic(const Duration(milliseconds: 300),
-                              (_) => controller.getDroneAngles())
-                          .asyncMap((event) async {
-                        await event;
-                        print("object");
-                      }),
-                      builder: (context, snap) {
-                        return ValueListenableBuilder<String>(
-                          valueListenable: controller.responseNotifier,
-                          builder: (context, response, _) {
-                            return Text(
-                              "\n${controller.response}",
-                              textAlign: TextAlign.center,
-                            );
-                          },
+              SizedBox(
+                width: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ValueListenableBuilder<List<num>>(
+                      valueListenable: controller.motorThrustListNotifier,
+                      builder: (context, thrust, _) {
+                        return Text(
+                          "\nM1: ${thrust[0]}  M2: ${thrust[1]}\n"
+                          "M3: ${thrust[2]}  M4: ${thrust[3]}",
+                          textAlign: TextAlign.center,
                         );
-                      }),
-                ],
+                      },
+                    ),
+                    StreamBuilder<void>(
+                        stream: Stream.periodic(
+                                const Duration(milliseconds: 300),
+                                (_) => controller.getDroneAngles())
+                            .asyncMap((event) async {
+                          await event;
+                        }),
+                        builder: (context, snap) {
+                          return ValueListenableBuilder<String>(
+                            valueListenable: controller.responseNotifier,
+                            builder: (context, response, _) {
+                              return SizedBox(
+                                width: 200,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    "\n${controller.response}",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }),
+                  ],
+                ),
               ),
               LiftAndYaw(controller: controller),
             ],

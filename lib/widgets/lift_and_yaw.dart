@@ -14,23 +14,36 @@ class LiftAndYaw extends StatelessWidget {
 
     controller.setpointVectorNotifier.notifyListeners();
 
-    try {
-      await controller.move();
-    } catch (e) {
-      //controller.droneVector.xy = Vector2(2000, 2000);
-    }
+    await controller.move();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Joystick(
-      mode: JoystickMode.horizontalAndVertical,
-      listener: (details) async {
-        _commandMovement(details);
-      },
-      onStickDragEnd: () {
-        _commandMovement(StickDragDetails(0, 0));
-      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          children: const [
+            Icon(Icons.remove_circle_outline),
+            Text(" Yaw"),
+            Text(" | "),
+            RotatedBox(
+              quarterTurns: 1,
+              child: Icon(Icons.remove_circle_outline),
+            ),
+            Text(" Thrust"),
+          ],
+        ),
+        Joystick(
+          mode: JoystickMode.horizontalAndVertical,
+          listener: (details) async {
+            _commandMovement(details);
+          },
+          onStickDragEnd: () {
+            _commandMovement(StickDragDetails(0, 0));
+          },
+        ),
+      ],
     );
   }
 }

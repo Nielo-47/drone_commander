@@ -89,10 +89,10 @@ class DroneController {
     final Vector2 pitchRollVector = Vector2(setpointVector.x, setpointVector.y);
 
     final List<double> motorAnglesToSetPoint = [
-      Vector2(-0.5, 0.5).angleTo(pitchRollVector) * 180 / pi,
       Vector2(0.5, 0.5).angleTo(pitchRollVector) * 180 / pi,
-      Vector2(-0.5, -0.5).angleTo(pitchRollVector) * 180 / pi,
+      Vector2(-0.5, 0.5).angleTo(pitchRollVector) * 180 / pi,
       Vector2(0.5, -0.5).angleTo(pitchRollVector) * 180 / pi,
+      Vector2(-0.5, -0.5).angleTo(pitchRollVector) * 180 / pi,
     ];
 
     _calculateLiftCoeff();
@@ -104,7 +104,7 @@ class DroneController {
     List<int> thrustsPercent = motorAnglesToSetPoint
         .map((e) => (liftPercent -
                 e.remapAndClamp(
-                        45, 135, 0, liftPercent < 50 ? 0 : maxMovePercent) *
+                        45, 135, 0, liftPercent < 30 ? 0 : maxMovePercent) *
                     pitchRollVector.length)
             .toInt())
         .toList();

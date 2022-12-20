@@ -19,13 +19,24 @@ class DroneJoystick extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Joystick(
-      listener: (details) async {
-        await _commandMovement(details);
-      },
-      onStickDragEnd: () async {
-        await _commandMovement(StickDragDetails(0, 0));
-      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          children: const [
+            Icon(Icons.gamepad),
+            Text(" Direction"),
+          ],
+        ),
+        Joystick(
+          listener: (details) async {
+            await _commandMovement(details);
+          },
+          onStickDragEnd: () async {
+            await _commandMovement(StickDragDetails(0, 0));
+          },
+        ),
+      ],
     );
   }
 }
